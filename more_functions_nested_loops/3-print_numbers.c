@@ -1,3 +1,8 @@
+/*
+ * File: 3-print_numbers.c
+ * Auth: Jay
+ */
+
 #include "main.h"
 
 /**
