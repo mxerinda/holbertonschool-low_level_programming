@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+ssize_t read_textfile(const char *filename, size_t letters) {
+    if (filename == NULL) {
+        return 0;  // Return 0 if filename is NULL
+    }
+
+    FILE *file = fopen(filename, "r");  // Open file in read mode
+    if (file == NULL) {
+        return 0;  // Return 0 if file can't be opened
+    }
+
+    char *buffer = (char *)malloc(letters + 1);  // Allocate buffer for reading
+    if (buffer == NULL) {
+        fclose(file);
+        return 0;  // Return 0 if memory allocation fails
+    }
+
+    ssize_t bytesRead = fread(buffer, 1, letters, file);  // Read from file
+    if (ferror(file)) {
+        fclose(file);
+        free(buffer);
+        return 0;  // Return 0 if read fails
+    }
+
+    buffer[bytesRead] = '\0';  // Null-terminate the buffer
+
+    ssize_t bytesWritten = fwrite(buffer, 1, bytesRead, stdout);  // Write to stdout
+    if (bytesWritten != bytesRead) {
+        fclose(file);
+        free(buffer);
+        return 0;  // Return 0 if write fails or doesn't write expected amount of bytes
+    }
+
+    fclose(file);
+    free(buffer);
+
+    return bytesRead;  // Return the actual number of letters read and printed
+}
